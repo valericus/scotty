@@ -8,11 +8,6 @@ app = Flask(__name__)
 storage = dict()
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
 @app.route('/add_user', methods=['POST'])
 def add_user():
     if not request.json:
