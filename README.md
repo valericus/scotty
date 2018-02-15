@@ -11,6 +11,20 @@ and [JSONSchema](https://python-jsonschema.readthedocs.io/) to validate input.
 pip install -r requirements.txt
 ```
 
+### Run tests
+```bash
+$ pytest tests/*
+============================= test session starts ==============================
+platform linux -- Python 3.5.2, pytest-3.4.0, py-1.5.2, pluggy-0.6.0
+rootdir: /home/vr/code/test_tasks/ntechlab_test_task, inifile:
+collected 7 items                                                              
+
+tests/dao.py ...                                                         [ 42%]
+tests/models.py ....                                                     [100%]
+
+=========================== 7 passed in 0.12 seconds ===========================
+```
+
 ### Start application
 ```bash
 python3 ./ntechlab_test_task.py

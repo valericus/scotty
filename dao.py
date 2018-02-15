@@ -16,7 +16,7 @@ class UserDAO:
     '''
 
     __save_user_sql = '''
-    INSERT INTO users (
+    INSERT OR REPLACE INTO users (
       username,
       x_coord,
       y_coord
@@ -52,7 +52,7 @@ class UserDAO:
         self.cursor.execute(self.__save_user_sql, user)
         self.cursor.connection.commit()
 
-    def get_nearest(self, x_coord: float, y_coord: float, count: int):
+    def get_nearest(self, x_coord: float, y_coord: float, count: int = 100):
         # some dirty hack as far as SQLite doesn't support square root without some dancing
         self.cursor.execute(self.__search_sql, (x_coord, x_coord, y_coord, y_coord, count))
         return self.cursor.fetchall()

@@ -10,7 +10,8 @@ class User(namedtuple('User', ('username', 'x_coord', 'y_coord'))):
             'username': {'type': 'string'},
             'x_coord': {'type': 'number'},
             'y_xoord': {'type': 'number'}
-        }
+        },
+        'required': ['username', 'x_coord', 'y_coord']
     }
 
     @classmethod
