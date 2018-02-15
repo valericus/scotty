@@ -1,11 +1,13 @@
-Test task for NTechLab.
-
 Simple server that stores users with their coordinates and searches for nearest users. 
+Data are stored right in memory so restart will drop everything. SQLite-driven persistent
+storage coming soon.
 
 
 # How to run
 
-### Install all requirements (Flask and JSONSchema)
+### Install all requirements 
+The application uses [Flask](http://flask.pocoo.org/) as web server
+and [JSONSchema](https://python-jsonschema.readthedocs.io/) to validate input.
 ```bash
 pip install -r requirements.txt
 ```
