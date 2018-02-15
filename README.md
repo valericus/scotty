@@ -59,7 +59,8 @@ Server: Werkzeug/0.14.1 Python/3.5.2
 }
 ```
 
-### Get nearest crew members
+### Get crew members sorted by distance
+Only first 100 members will be returned.
 ```bash
 $ http localhost:5000/get_users x_coord==4 y_coord==5
 HTTP/1.0 200 OK
@@ -86,6 +87,25 @@ Server: Werkzeug/0.14.1 Python/3.5.2
         "username": "Spock",
         "x_coord": 13,
         "y_coord": 25
+    }
+]
+```
+
+### Get nearest crew member
+```bash
+$ http localhost:5000/get_users x_coord==4 y_coord==5 count==1
+HTTP/1.0 200 OK
+Content-Length: 125
+Content-Type: application/json
+Date: Thu, 15 Feb 2018 15:47:00 GMT
+Server: Werkzeug/0.14.1 Python/3.5.2
+
+[
+    {
+        "distance": 2.8284271247461903,
+        "username": "James Tiberius Kirk",
+        "x_coord": 2,
+        "y_coord": 3
     }
 ]
 ```
