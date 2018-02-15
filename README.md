@@ -1,4 +1,4 @@
-Simple server that stores users with their coordinates and searches for nearest users. 
+Simple server that stores users with their coordinates and searches for nearest one. 
 Data are stored right in memory so restart will drop everything. SQLite-driven persistent
 storage coming soon.
 
@@ -90,4 +90,4 @@ Server: Werkzeug/0.14.1 Python/3.5.2
 ]
 ```
 
-### Live long and prosper.
+Live long and prosper :vulcan_salute:
