@@ -1,7 +1,6 @@
-Simple server that stores users with their coordinates and searches for nearest one. 
-Data are stored right in memory so restart will drop everything. SQLite-driven persistent
-storage coming soon.
-
+Simple server that stores users with their coordinates and searches for nearest one.
+Data is stored in SQLite, file `data.sqlite` in current path. Path to data base file
+is hardcoded for simplicity.
 
 # How to run
 
