@@ -1,5 +1,4 @@
 from collections import namedtuple
-from math import sqrt
 
 from jsonschema import validate
 
@@ -28,11 +27,6 @@ class User(namedtuple('User', ('username', 'x_coord', 'y_coord'))):
 
 
 class SearchResult(namedtuple('SearchResult', ('username', 'x_coord', 'y_coord', 'distance'))):
-
-    @classmethod
-    def for_user(cls, user: User, x_coord: float, y_coord: float):
-        distance = sqrt((user.x_coord - x_coord) ** 2 + (user.y_coord - y_coord) ** 2)
-        return cls(user.username, user.x_coord, user.y_coord, distance)
 
     def to_dict(self):
         return {
