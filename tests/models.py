@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from jsonschema import ValidationError
 
-from model import User, SearchResult
+from model import User
 
 
 class UserTestCase(TestCase):
@@ -38,25 +38,3 @@ class UserTestCase(TestCase):
         for data in (no_username, no_x_coord, no_y_coord, non_number_coords):
             with self.assertRaises(ValidationError):
                 User.from_dict(data)
-
-    def test_to_dict(self):
-        user = User('Montgomery Christopher Jorgensen Scott', 23, 32)
-        expected_result = {
-            'username': 'Montgomery Christopher Jorgensen Scott',
-            'x_coord': 23,
-            'y_coord': 32
-        }
-        self.assertEqual(user.to_dict(), expected_result)
-
-
-class SearchResultTestCase(TestCase):
-
-    def test_to_dict(self):
-        search_result = SearchResult('Montgomery Christopher Jorgensen Scott', 23, 32, 20)
-        expected_result = {
-            'username': 'Montgomery Christopher Jorgensen Scott',
-            'x_coord': 23,
-            'y_coord': 32,
-            'distance': 20
-        }
-        self.assertEqual(search_result.to_dict(), expected_result)

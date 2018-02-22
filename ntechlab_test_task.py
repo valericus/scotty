@@ -21,7 +21,7 @@ def add_user():
         abort(400, e)
 
     dao.save(user)
-    return jsonify(user.to_dict())
+    return jsonify(user._asdict())
 
 
 @app.route('/get_users')
@@ -42,7 +42,7 @@ def get_user():
 
     result = dao.get_nearest(x_coord, y_coord, count)
 
-    return jsonify([i.to_dict() for i in result])
+    return jsonify([i._asdict() for i in result])
 
 
 if __name__ == '__main__':

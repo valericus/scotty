@@ -19,20 +19,6 @@ class User(namedtuple('User', ('username', 'x_coord', 'y_coord'))):
         validate(data, cls.schema)
         return cls(data['username'], data['x_coord'], data['y_coord'])
 
-    def to_dict(self):
-        return {
-            'username': self.username,
-            'x_coord': self.x_coord,
-            'y_coord': self.y_coord
-        }
-
 
 class SearchResult(namedtuple('SearchResult', ('username', 'x_coord', 'y_coord', 'distance'))):
-
-    def to_dict(self):
-        return {
-            'username': self.username,
-            'x_coord': self.x_coord,
-            'y_coord': self.y_coord,
-            'distance': self.distance
-        }
+    pass
