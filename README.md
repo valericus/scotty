@@ -4,8 +4,13 @@ engine, also it has wonderful extension [PostGIS](https://postgis.net/) to manag
 
 Current version is a bit too anthropocentric, as it assumes that coordinates are passed as degrees of latitude and
 longitude, and distance is calculated in meters, according to [WGS 84](https://epsg.io/4326). So distances are
-calculated correctly only for Earth, but sorting should be more or less correct for any spheroidal planet.
-Kindly let me know if you need support of other planets.
+calculated correctly only for Earth, but sorting should be more or less correct for any spheroidal planet. Kindly let me
+know if you need support of other planets.
+
+There are also some difficulties with performance. Unfortunately there is no plain and simple way to optimise
+calculation of distance between two dots on surface, so search of the nearest user has linear difficulty. On the other
+hand, ordinary laptop with i7 CPU without any PostgreSQL fine-tuning handles 100k users for about 320 ms, and that looks
+acceptable.
 
 # How to run
 
@@ -48,7 +53,7 @@ First create configuration file, you can use `config.ini-example` as an example.
 cp config.ini-example config.ini
 ```
 
-Create database and user to use postgres credentials from default config file. Create `postgis` extension.
+Create database and user to use PostgreSQL credentials from default config file. Create `postgis` extension.
 
 ```sql
 create database scotty;

@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from psycopg_pool import ConnectionPool
 
 from model import User, SearchResult
@@ -46,6 +48,11 @@ class UserDAO:
         with self._pool.connection() as conn:
             with conn.cursor() as cursor:
                 cursor.execute(self._save_user_sql, user)
+
+    def save_many(self, users: Iterable[User]):
+        with self._pool.connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.executemany(self._save_user_sql, users)
 
     def get_nearest(self, lat: float, long: float, count: int = 100):
         with self._pool.connection() as conn:
