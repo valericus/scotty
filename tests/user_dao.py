@@ -10,7 +10,8 @@ def test_save_and_get(connection_pool, test_table_name):
     _log.info(f'Started test with table name {test_table_name}')
     dao = UserDAO(connection_pool, test_table_name)
     dao.save(User('Pavel Andreievich Chekov', 15, 21))
-    expected_result = [SearchResult('Pavel Andreievich Chekov', 15, 21, 4)]
+    # coordinates are specified as degrees of lat and long, distance is measured in meters
+    expected_result = [SearchResult('Pavel Andreievich Chekov', 15, 21, 442977.30004328)]
 
     actual_result = dao.get_nearest(15, 25)
 
@@ -36,7 +37,8 @@ def test_replace(connection_pool, test_table_name):
     dao = UserDAO(connection_pool, test_table_name)
     dao.save(User('Pavel Andreievich Chekov', 15, 21))
     dao.save(User('Pavel Andreievich Chekov', 1, 1))
-    expected_result = [SearchResult('Pavel Andreievich Chekov', 1, 1, 5)]
+    # coordinates are specified as degrees of lat and long, distance is measured in meters
+    expected_result = [SearchResult('Pavel Andreievich Chekov', 1, 1, 553912.06108329)]
 
     actual_result = dao.get_nearest(4, 5)
 

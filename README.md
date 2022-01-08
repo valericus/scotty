@@ -19,7 +19,8 @@ pip install -r requirements.in/test.txt
 
 ### Run tests
 
-Tests requre running PostgreSQL instance and account permitted to create and drop tables.
+Tests requre running PostgreSQL instance with enabled `postgis` extension and account permitted to create and drop
+tables.
 
 ```bash
 $ pytest --conninfo postgresql://scotty:scotty@localhost:5432/scotty tests/*
@@ -42,10 +43,13 @@ First create configuration file, you can use `config.ini-example` as an example.
 cp config.ini-example config.ini
 ```
 
-Create database and user to use postgres credentials from default config file.
+Create database and user to use postgres credentials from default config file. Create `postgis` extension.
 
 ```sql
-create table scotty;
+create database scotty;
+\connect scotty
+create extension postgis;
+
 create user scotty;
 alter database scotty owner to scotty;
 \passwd scotty
@@ -114,19 +118,19 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 
 [
     {
-        "distance": 2.8284271247461903,
+        "distance": 313424.65220079,
         "username": "James Tiberius Kirk",
         "x_coord": 2.0,
         "y_coord": 3.0
     },
     {
-        "distance": 3.1622776601683795,
+        "distance": 349845.80896481,
         "username": "Leonard McCoy",
         "x_coord": 3.0,
         "y_coord": 2.0
     },
     {
-        "distance": 21.93171219946131,
+        "distance": 2413163.60819159,
         "username": "Spock",
         "x_coord": 13.0,
         "y_coord": 25.0
@@ -146,7 +150,7 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 
 [
     {
-        "distance": 2.8284271247461903,
+        "distance": 313424.65220079,
         "username": "James Tiberius Kirk",
         "x_coord": 2.0,
         "y_coord": 3.0
