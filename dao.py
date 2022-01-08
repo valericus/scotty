@@ -5,33 +5,33 @@ from model import User, SearchResult
 
 class UserDAO:
     __startup_sql = '''
-    CREATE EXTENSION IF NOT EXISTS postgis;
+    create extension if not exists postgis;
 
-    CREATE TABLE IF NOT EXISTS "{table_name}" (
-      username VARCHAR PRIMARY KEY NOT NULL,
-      location GEOGRAPHY(POINT, 4326)
+    create table if not exists "{table_name}" (
+      username varchar primary key not null,
+      location geography(point, 4326)
     );
     '''
 
     __save_user_sql = '''
-    INSERT INTO "{table_name}" (
+    insert into "{table_name}" (
       username,
       location
-    ) VALUES (%s, ST_POINT(%s, %s))
-    ON CONFLICT (username) DO UPDATE SET
-      location = EXCLUDED.location;
+    ) values (%s, st_point(%s, %s))
+    on conflict (username) do update set
+      location = excluded.location;
     '''
 
     __search_sql = '''
-    SELECT
+    select
       username,
-      st_x(location::geometry) as x_coord,
-      st_y(location::geometry) as y_coord,
+      st_x(location::geometry) as lat,
+      st_y(location::geometry) as long,
       st_distance(st_point(%s, %s), location) as distance
-    FROM
+    from
       "{table_name}"
-    ORDER BY distance
-    LIMIT %s;
+    order by distance
+    limit %s;
     '''
 
     def __init__(self, connection_pool: ConnectionPool, table_name='users'):
@@ -47,8 +47,8 @@ class UserDAO:
             with conn.cursor() as cursor:
                 cursor.execute(self._save_user_sql, user)
 
-    def get_nearest(self, x_coord: float, y_coord: float, count: int = 100):
+    def get_nearest(self, lat: float, long: float, count: int = 100):
         with self._pool.connection() as conn:
             with conn.cursor() as cursor:
-                cursor.execute(self._search_sql, (x_coord, y_coord, count))
+                cursor.execute(self._search_sql, (lat, long, count))
                 return [SearchResult(row[0], row[1], row[2], row[3]) for row in cursor.fetchall()]

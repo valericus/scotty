@@ -24,20 +24,20 @@ class Api:
 
         @self.app.route('/get_users')
         def get_user():
-            if request.args.get('x_coord') and request.args.get('y_coord'):
+            if request.args.get('lat') and request.args.get('long'):
                 try:
-                    x_coord = float(request.args['x_coord'])
-                    y_coord = float(request.args['y_coord'])
+                    lat = float(request.args['lat'])
+                    long = float(request.args['long'])
                 except ValueError:
-                    abort(400, 'Query parameters "x_coord" and "y_coord" are supposed to be numbers')
+                    abort(400, 'Query parameters "lat" and "long" are supposed to be numbers')
             else:
-                abort(400, 'Query parameters "x_coord" and "y_coord" are required')
+                abort(400, 'Query parameters "lat" and "long" are required')
 
             try:
                 count = int(request.args['count'])
             except (KeyError, ValueError):
                 count = 100
 
-            result = dao.get_nearest(x_coord, y_coord, count)
+            result = dao.get_nearest(lat, long, count)
 
             return jsonify([i._asdict() for i in result])

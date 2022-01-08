@@ -1,6 +1,11 @@
-Simple server that stores users with their coordinates and searches for nearest one. Data is stored
+Simple service that stores users with their coordinates and searches for nearest one. Data is stored
 in [PostgreSQL](https://www.postgresql.org/) database. It's picked because it's very common and highly reliable database
 engine, also it has wonderful extension [PostGIS](https://postgis.net/) to manage geospatial data.
+
+Current version is a bit too anthropocentric, as it assumes that coordinates are passed as degrees of latitude and
+longitude, and distance is calculated in meters, according to [WGS 84](https://epsg.io/4326). So distances are
+calculated correctly only for Earth, but sorting should be more or less correct for any spheroidal planet.
+Kindly let me know if you need support of other planets.
 
 # How to run
 
@@ -64,7 +69,7 @@ Then start application.
 ### Add some users
 
 ```bash
-$ http POST localhost:5000/add_user "username=James Tiberius Kirk" x_coord:=2 y_coord:=3
+$ http POST localhost:5000/add_user "username=James Tiberius Kirk" lat:=2 long:=3
 HTTP/1.0 200 OK
 Content-Length: 59
 Content-Type: application/json
@@ -73,11 +78,11 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 
 {
     "username": "James Tiberius Kirk",
-    "x_coord": 2,
-    "y_coord": 3
+    "lat": 2,
+    "long": 3
 }
 
-$ http POST localhost:5000/add_user "username=Leonard McCoy" x_coord:=3 y_coord:=2
+$ http POST localhost:5000/add_user "username=Leonard McCoy" lat:=3 long:=2
 HTTP/1.0 200 OK
 Content-Length: 53
 Content-Type: application/json
@@ -86,11 +91,11 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 
 {
     "username": "Leonard McCoy",
-    "x_coord": 3,
-    "y_coord": 2
+    "lat": 3,
+    "long": 2
 }
 
-$ http POST localhost:5000/add_user username=Spock x_coord:=13 y_coord:=25
+$ http POST localhost:5000/add_user username=Spock lat:=13 long:=25
 HTTP/1.0 200 OK
 Content-Length: 47
 Content-Type: application/json
@@ -99,8 +104,8 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 
 {
     "username": "Spock",
-    "x_coord": 13,
-    "y_coord": 25
+    "lat": 13,
+    "long": 25
 }
 ```
 
@@ -109,7 +114,7 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 Only first 100 members will be returned.
 
 ```bash
-$ http localhost:5000/get_users x_coord==4 y_coord==5
+$ http localhost:5000/get_users lat==4 long==5
 HTTP/1.0 200 OK
 Content-Length: 262
 Content-Type: application/json
@@ -120,20 +125,20 @@ Server: Werkzeug/2.0.2 Python/3.8.10
     {
         "distance": 313424.65220079,
         "username": "James Tiberius Kirk",
-        "x_coord": 2.0,
-        "y_coord": 3.0
+        "lat": 2.0,
+        "long": 3.0
     },
     {
         "distance": 349845.80896481,
         "username": "Leonard McCoy",
-        "x_coord": 3.0,
-        "y_coord": 2.0
+        "lat": 3.0,
+        "long": 2.0
     },
     {
         "distance": 2413163.60819159,
         "username": "Spock",
-        "x_coord": 13.0,
-        "y_coord": 25.0
+        "lat": 13.0,
+        "long": 25.0
     }
 ]
 ```
@@ -141,7 +146,7 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 ### Get the nearest crew member
 
 ```bash
-$ http localhost:5000/get_users x_coord==4 y_coord==5 count==1
+$ http localhost:5000/get_users lat==4 long==5 count==1
 HTTP/1.0 200 OK
 Content-Length: 95
 Content-Type: application/json
@@ -152,8 +157,8 @@ Server: Werkzeug/2.0.2 Python/3.8.10
     {
         "distance": 313424.65220079,
         "username": "James Tiberius Kirk",
-        "x_coord": 2.0,
-        "y_coord": 3.0
+        "lat": 2.0,
+        "long": 3.0
     }
 ]
 ```

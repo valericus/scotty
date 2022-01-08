@@ -3,22 +3,22 @@ from collections import namedtuple
 from jsonschema import validate
 
 
-class User(namedtuple('User', ('username', 'x_coord', 'y_coord'))):
+class User(namedtuple('User', ('username', 'lat', 'long'))):
     schema = {
         'type': 'object',
         'properties': {
             'username': {'type': 'string'},
-            'x_coord': {'type': 'number'},
-            'y_xoord': {'type': 'number'}
+            'lat': {'type': 'number'},
+            'long': {'type': 'number'}
         },
-        'required': ['username', 'x_coord', 'y_coord']
+        'required': ['username', 'lat', 'long']
     }
 
     @classmethod
     def from_dict(cls, data: dict):
         validate(data, cls.schema)
-        return cls(data['username'], data['x_coord'], data['y_coord'])
+        return cls(data['username'], data['lat'], data['long'])
 
 
-class SearchResult(namedtuple('SearchResult', ('username', 'x_coord', 'y_coord', 'distance'))):
+class SearchResult(namedtuple('SearchResult', ('username', 'lat', 'long', 'distance'))):
     pass
