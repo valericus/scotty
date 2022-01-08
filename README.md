@@ -1,14 +1,16 @@
-Simple server that stores users with their coordinates and searches for nearest one.
-Data is stored in SQLite, file `data.sqlite` in current path. Path to database file
-is hardcoded for simplicity.
+Simple server that stores users with their coordinates and searches for nearest one. Data is stored
+in [PostgreSQL](https://www.postgresql.org/) database. It's picked because it's very common and highly reliable database
+engine, also it has wonderful extension [PostGIS](https://postgis.net/) to manage geospatial data.
 
 # How to run
 
-### Install all requirements 
-The application uses [Flask](http://flask.pocoo.org/) as web server
-and [JSONSchema](https://python-jsonschema.readthedocs.io/) to validate input.
-[pytest](https://docs.pytest.org/en/stable/index.html) is also can be useful
-to run tests.
+### Install all requirements
+
+The application uses [Flask](http://flask.pocoo.org/) as web server,
+[JSONSchema](https://python-jsonschema.readthedocs.io/) to validate input
+and [psycopg3](https://www.psycopg.org/psycopg3/) to connect to PostgreSQL.
+[pytest](https://docs.pytest.org/en/stable/index.html) is also can be useful to run tests.
+
 ```bash
 python3 -m venv --system-site-packages ./venv
 source ./venv/bin/activate
@@ -16,6 +18,7 @@ pip install -r requirements.in/test.txt
 ```
 
 ### Run tests
+
 ```bash
 $ pytest tests/*
 ============================= test session starts ==============================
@@ -30,18 +33,37 @@ tests/models.py ..
 ```
 
 ### Start application
+
+First create configuration file, you can use `config.ini-example` as an example.
+
 ```bash
-python3 ./ntechlab_test_task.py
+cp config.ini-example config.ini
+```
+
+Create database and user to use postgres credentials from default config file.
+
+```sql
+create table scotty;
+create user scotty;
+alter database scotty owner to scotty;
+\passwd scotty
+```
+
+Then start application.
+
+```bash
+./scotty.py --config config.ini
 ```
 
 ### Add some users
+
 ```bash
 $ http POST localhost:5000/add_user "username=James Tiberius Kirk" x_coord:=2 y_coord:=3
 HTTP/1.0 200 OK
 Content-Length: 59
 Content-Type: application/json
-Date: Sat, 10 Apr 2021 23:54:44 GMT
-Server: Werkzeug/1.0.1 Python/3.8.0
+Date: Sat, 10 Jan 2022 23:54:44 GMT
+Server: Werkzeug/2.0.2 Python/3.8.10
 
 {
     "username": "James Tiberius Kirk",
@@ -53,8 +75,8 @@ $ http POST localhost:5000/add_user "username=Leonard McCoy" x_coord:=3 y_coord:
 HTTP/1.0 200 OK
 Content-Length: 53
 Content-Type: application/json
-Date: Sat, 10 Apr 2021 23:55:31 GMT
-Server: Werkzeug/1.0.1 Python/3.8.0
+Date: Sat, 10 Jan 2022 23:55:31 GMT
+Server: Werkzeug/2.0.2 Python/3.8.10
 
 {
     "username": "Leonard McCoy",
@@ -66,8 +88,8 @@ $ http POST localhost:5000/add_user username=Spock x_coord:=13 y_coord:=25
 HTTP/1.0 200 OK
 Content-Length: 47
 Content-Type: application/json
-Date: Sat, 10 Apr 2021 23:56:00 GMT
-Server: Werkzeug/1.0.1 Python/3.8.0
+Date: Sat, 10 Jan 2022 23:56:00 GMT
+Server: Werkzeug/2.0.2 Python/3.8.10
 
 {
     "username": "Spock",
@@ -77,14 +99,16 @@ Server: Werkzeug/1.0.1 Python/3.8.0
 ```
 
 ### Get crew members sorted by distance
+
 Only first 100 members will be returned.
+
 ```bash
 $ http localhost:5000/get_users x_coord==4 y_coord==5
 HTTP/1.0 200 OK
 Content-Length: 262
 Content-Type: application/json
-Date: Sat, 10 Apr 2021 23:56:34 GMT
-Server: Werkzeug/1.0.1 Python/3.8.0
+Date: Sat, 10 Jan 2022 23:56:34 GMT
+Server: Werkzeug/2.0.2 Python/3.8.10
 
 [
     {
@@ -109,13 +133,14 @@ Server: Werkzeug/1.0.1 Python/3.8.0
 ```
 
 ### Get the nearest crew member
+
 ```bash
 $ http localhost:5000/get_users x_coord==4 y_coord==5 count==1
 HTTP/1.0 200 OK
 Content-Length: 95
 Content-Type: application/json
-Date: Sat, 10 Apr 2021 23:57:07 GMT
-Server: Werkzeug/1.0.1 Python/3.8.0
+Date: Sat, 10 Jan 2022 23:57:07 GMT
+Server: Werkzeug/2.0.2 Python/3.8.10
 
 [
     {

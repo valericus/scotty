@@ -1,24 +1,28 @@
-from math import sqrt
-from sqlite3 import connect
+from psycopg_pool import ConnectionPool
 
 from model import User, SearchResult
 
 
 class UserDAO:
     __startup_sql = '''
+    CREATE 
+    
     CREATE TABLE IF NOT EXISTS users (
-      username VARCHAR(255) PRIMARY KEY,
+      username VARCHAR PRIMARY KEY,
       x_coord FLOAT,
       y_coord FLOAT
     );
     '''
 
     __save_user_sql = '''
-    INSERT OR REPLACE INTO users (
+    INSERT INTO users (
       username,
       x_coord,
       y_coord
-    ) VALUES (?, ?, ?);
+    ) VALUES (%s, %s, %s)
+    ON CONFLICT (username) DO UPDATE SET
+      x_coord = EXCLUDED.x_coord,
+      y_coord = EXCLUDED.y_coord;
     '''
 
     __search_sql = '''
@@ -26,26 +30,26 @@ class UserDAO:
       username,
       x_coord,
       y_coord,
-      (x_coord - ?) * (x_coord - ?) + (y_coord - ?) * (y_coord - ?) as square_distance
+      sqrt((x_coord - %s) * (x_coord - %s) + (y_coord - %s) * (y_coord - %s)) as square_distance
     FROM
       users
     ORDER BY square_distance
-    LIMIT ?;
+    LIMIT %s;
     '''
 
-    def __init__(self, path: str):
-        self._path = path
-        with connect(path) as connection:
-            cursor = connection.cursor()
-            cursor.execute(self.__startup_sql)
+    def __init__(self, connection_pool: ConnectionPool):
+        self._pool = connection_pool
+        with self._pool.connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(self.__startup_sql)
 
     def save(self, user: User):
-        with connect(self._path) as connection:
-            cursor = connection.cursor()
-            cursor.execute(self.__save_user_sql, user)
+        with self._pool.connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(self.__save_user_sql, user)
 
     def get_nearest(self, x_coord: float, y_coord: float, count: int = 100):
-        with connect(self._path) as connection:
-            cursor = connection.cursor()
-            cursor.execute(self.__search_sql, (x_coord, x_coord, y_coord, y_coord, count))
-            return [SearchResult(row[0], row[1], row[2], sqrt(row[3])) for row in cursor.fetchall()]
+        with self._pool.connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(self.__search_sql, (x_coord, x_coord, y_coord, y_coord, count))
+                return [SearchResult(row[0], row[1], row[2], row[3]) for row in cursor.fetchall()]

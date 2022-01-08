@@ -1,0 +1,6 @@
+[http]
+host = localhost
+port = 5000
+
+[database]
+conninfo = postgresql://scotty:scotty@localhost:5432/scotty
