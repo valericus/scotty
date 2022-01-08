@@ -19,17 +19,19 @@ pip install -r requirements.in/test.txt
 
 ### Run tests
 
+Tests requre running PostgreSQL instance and account permitted to create and drop tables.
+
 ```bash
-$ pytest tests/*
+$ pytest --conninfo postgresql://scotty:scotty@localhost:5432/scotty tests/*
 ============================= test session starts ==============================
-platform linux -- Python 3.8.0, pytest-6.2.3, py-1.10.0, pluggy-0.13.1
-rootdir: /home/valera/code/test_tasks/ntechlab_test_task
-collected 8 items                                                              
+platform linux -- Python 3.8.10, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: /home/valera/code/personal/ntechlab_test_task
+collected 5 items                                                                                                                                                           
 
-tests/dao.py ......                                                      [ 37%]
-tests/models.py ..
+tests/models.py ..                                                                                                                                                    [ 40%]
+tests/user_dao.py ...    
 
-============================== 8 passed in 0.24s ===============================
+============================== 8 passed in 0.15s ===============================
 ```
 
 ### Start application

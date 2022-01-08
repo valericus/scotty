@@ -5,9 +5,7 @@ from model import User, SearchResult
 
 class UserDAO:
     __startup_sql = '''
-    CREATE 
-    
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS "{table_name}" (
       username VARCHAR PRIMARY KEY,
       x_coord FLOAT,
       y_coord FLOAT
@@ -15,7 +13,7 @@ class UserDAO:
     '''
 
     __save_user_sql = '''
-    INSERT INTO users (
+    INSERT INTO "{table_name}" (
       username,
       x_coord,
       y_coord
@@ -32,24 +30,26 @@ class UserDAO:
       y_coord,
       sqrt((x_coord - %s) * (x_coord - %s) + (y_coord - %s) * (y_coord - %s)) as square_distance
     FROM
-      users
+      "{table_name}"
     ORDER BY square_distance
     LIMIT %s;
     '''
 
-    def __init__(self, connection_pool: ConnectionPool):
+    def __init__(self, connection_pool: ConnectionPool, table_name='users'):
+        self._search_sql = self.__search_sql.format(table_name=table_name)
+        self._save_user_sql = self.__save_user_sql.format(table_name=table_name)
         self._pool = connection_pool
         with self._pool.connection() as conn:
             with conn.cursor() as cursor:
-                cursor.execute(self.__startup_sql)
+                cursor.execute(self.__startup_sql.format(table_name=table_name))
 
     def save(self, user: User):
         with self._pool.connection() as conn:
             with conn.cursor() as cursor:
-                cursor.execute(self.__save_user_sql, user)
+                cursor.execute(self._save_user_sql, user)
 
     def get_nearest(self, x_coord: float, y_coord: float, count: int = 100):
         with self._pool.connection() as conn:
             with conn.cursor() as cursor:
-                cursor.execute(self.__search_sql, (x_coord, x_coord, y_coord, y_coord, count))
+                cursor.execute(self._search_sql, (x_coord, x_coord, y_coord, y_coord, count))
                 return [SearchResult(row[0], row[1], row[2], row[3]) for row in cursor.fetchall()]
