@@ -12,12 +12,12 @@ class Api:
         @self.app.route('/add_user', methods=['POST'])
         def add_user():
             if not request.json:
-                abort(400, 'Mime type application/json expected')
+                return abort(400, 'Mime type application/json expected')
 
             try:
                 user = User.from_dict(request.json)
             except ValidationError as e:
-                abort(400, e)
+                return abort(400, e)
 
             dao.save(user)
             return jsonify(user._asdict())
@@ -29,9 +29,9 @@ class Api:
                     lat = float(request.args['lat'])
                     long = float(request.args['long'])
                 except ValueError:
-                    abort(400, 'Query parameters "lat" and "long" are supposed to be numbers')
+                    return abort(400, 'Query parameters "lat" and "long" are supposed to be numbers')
             else:
-                abort(400, 'Query parameters "lat" and "long" are required')
+                return abort(400, 'Query parameters "lat" and "long" are required')
 
             try:
                 count = int(request.args['count'])

@@ -1,2 +1,2 @@
 -r main.txt
-pytest==6.2.5
+pytest==7.2.2

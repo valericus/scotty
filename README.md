@@ -35,14 +35,14 @@ tables.
 ```bash
 $ pytest --conninfo postgresql://scotty:scotty@localhost:5432/scotty tests/*
 ============================= test session starts ==============================
-platform linux -- Python 3.8.10, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
-rootdir: /home/valera/code/personal/ntechlab_test_task
-collected 5 items                                                                                                                                                           
+platform linux -- Python 3.11.2, pytest-7.2.2, pluggy-1.0.0
+rootdir: /home/valera/code/personal/scotty
+collected 5 items
 
-tests/models.py ..                                                                                                                                                    [ 40%]
-tests/user_dao.py ...    
+tests/models.py ..                                                        [ 40%]
+tests/user_dao.py ...                                                     [100%]
 
-============================== 8 passed in 0.15s ===============================
+============================== 5 passed in 0.23s ===============================
 ```
 
 ### Start application
@@ -75,11 +75,12 @@ Then start application.
 
 ```bash
 $ http POST localhost:5000/add_user "username=James Tiberius Kirk" lat:=2 long:=3
-HTTP/1.0 200 OK
+HTTP/1.1 200 OK
+Connection: close
 Content-Length: 59
 Content-Type: application/json
-Date: Sat, 10 Jan 2022 23:54:44 GMT
-Server: Werkzeug/2.0.2 Python/3.8.10
+Date: Mon, 27 Mar 2023 00:17:25 GMT
+Server: Werkzeug/2.2.3 Python/3.11.2
 
 {
     "username": "James Tiberius Kirk",
@@ -88,11 +89,12 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 }
 
 $ http POST localhost:5000/add_user "username=Leonard McCoy" lat:=3 long:=2
-HTTP/1.0 200 OK
+HTTP/1.1 200 OK
+Connection: close
 Content-Length: 53
 Content-Type: application/json
-Date: Sat, 10 Jan 2022 23:55:31 GMT
-Server: Werkzeug/2.0.2 Python/3.8.10
+Date: Mon, 27 Mar 2023 00:17:34 GMT
+Server: Werkzeug/2.2.3 Python/3.11.2
 
 {
     "username": "Leonard McCoy",
@@ -101,11 +103,12 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 }
 
 $ http POST localhost:5000/add_user username=Spock lat:=13 long:=25
-HTTP/1.0 200 OK
-Content-Length: 47
+HTTP/1.1 200 OK
+Connection: close
+Content-Length: 40
 Content-Type: application/json
-Date: Sat, 10 Jan 2022 23:56:00 GMT
-Server: Werkzeug/2.0.2 Python/3.8.10
+Date: Mon, 27 Mar 2023 00:19:05 GMT
+Server: Werkzeug/2.2.3 Python/3.11.2
 
 {
     "username": "Spock",
@@ -119,12 +122,13 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 Only first 100 members will be returned.
 
 ```bash
-$ http localhost:5000/get_users lat==4 long==5
-HTTP/1.0 200 OK
-Content-Length: 262
+$ http GET localhost:5000/get_users lat==4 long==5
+HTTP/1.1 200 OK
+Connection: close
+Content-Length: 234
 Content-Type: application/json
-Date: Sat, 10 Jan 2022 23:56:34 GMT
-Server: Werkzeug/2.0.2 Python/3.8.10
+Date: Mon, 27 Mar 2023 00:19:38 GMT
+Server: Werkzeug/2.2.3 Python/3.11.2
 
 [
     {
@@ -151,12 +155,13 @@ Server: Werkzeug/2.0.2 Python/3.8.10
 ### Get the nearest crew member
 
 ```bash
-$ http localhost:5000/get_users lat==4 long==5 count==1
-HTTP/1.0 200 OK
-Content-Length: 95
+$ http GET localhost:5000/get_users lat==4 long==5 count==1
+HTTP/1.1 200 OK
+Connection: close
+Content-Length: 85
 Content-Type: application/json
-Date: Sat, 10 Jan 2022 23:57:07 GMT
-Server: Werkzeug/2.0.2 Python/3.8.10
+Date: Mon, 27 Mar 2023 00:20:04 GMT
+Server: Werkzeug/2.2.3 Python/3.11.2
 
 [
     {
